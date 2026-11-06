@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Visualizations | Charging Ahead, but for Whom?</title>
+  <meta name="description" content="Three visualizations of public EV charging in Massachusetts: when it was built, where it is, and who runs it.">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="hero hero-small">
+    <div class="wrap">
+      <nav class="site-nav" aria-label="Main">
+        <a href="index.html">Home</a>
+        <a href="visualizations.html" aria-current="page">Visualizations</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <h1 class="page-title">The data, in three charts</h1>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section aria-labelledby="reading">
+      <h2 id="reading">How to read these charts</h2>
+      <p>The charts on this page follow three questions: when public charging was built in Massachusetts, where it is, and who runs it. All three count ports, and a port is a place where one vehicle can plug in. Stations can have several ports, and several stations can share an address, so we count ports to show capacity and addresses to show locations.</p>
+      <p>Charger level comes up throughout. Level 1 chargers use an ordinary household outlet and are the slowest, and only 6 of the state's public ports are Level 1. Level 2 chargers are faster and suit places where a car stays parked for hours, such as a workplace or a parking garage. They make up 83% of ports. DC fast chargers are the quickest and suit shorter stops, and they make up the remaining 17%.</p>
+      <figure class="photo">
+        <img src="images/charging-billerica.jpg" width="1280" height="853" alt="A gray electric hatchback parked at one of two orange ChargePoint DC fast chargers, with blue EV symbols painted on the parking spaces.">
+        <figcaption>A DC fast charging station in Billerica, June 2026. Photo by <a href="https://commons.wikimedia.org/wiki/File:Chargepoint_DC_fast_charging_station_in_Billerica,_MA_June_2026_1.jpg">4300streetcar</a>, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>.</figcaption>
+      </figure>
+      <p>The level changes how each pattern reads. A cluster of Level 2 ports helps people who can leave a car parked for hours, while a DC fast station helps someone who needs a quick stop. That is why we compare the levels side by side wherever we can. A network is the company that operates a charger, and the last chart shows that the leading company for one level isn't necessarily the leader for the other.</p>
+    </section>
+
+    <section aria-labelledby="when">
+      <p class="eyebrow">1. When</p>
+      <h2 id="when">Most of today's ports opened after 2020</h2>
+      <p>Only 1,475 of today's 11,866 ports opened before 2021. Level 2 makes up most of the network, while about two thirds of DC fast ports were added since the start of 2024.</p>
+      <div id="chart-growth" class="chart" role="img" aria-label="Stacked area chart of cumulative public charging ports by year, 2009 to 2026, rising from 2 ports to 11,866, with most of the growth after 2020. Values are in the table below the chart."></div>
+      <p class="note">Running total of ports at stations open today, by the year each station opened. 2026 runs through October 12. Stations that have since closed are not counted, so this is not the full history of the network. Level 1 has only 6 ports, too few to see on this scale.</p>
+      <details><summary>Show the data as a table</summary><div id="table-growth" class="table-wrap"></div></details>
+    </section>
+
+    <section aria-labelledby="where">
+      <p class="eyebrow">2. Where</p>
+      <h2 id="where">Charging clusters around Boston, and fast charging is more spread out</h2>
+      <p>62% of all ports are within 25 miles of downtown Boston, compared with 44% of DC fast ports. Each dot is one address, and a bigger dot means more ports.</p>
+      <p class="readout" id="map-count" aria-live="polite"></p>
+      <div id="chart-map" class="chart"></div>
+      <p class="note">Move the slider to replay the build-out, or hover over a dot for details. Color shows the fastest charger at each address among stations open by the selected year. Ports at one address can belong to more than one network. The dashed ring marks 25 miles from downtown Boston.</p>
+      <details><summary>Show the top 10 cities as a table</summary><div id="table-cities" class="table-wrap"></div></details>
+    </section>
+
+    <section aria-labelledby="who">
+      <p class="eyebrow">3. Who</p>
+      <h2 id="who">One network leads Level 2, but fast charging is split differently</h2>
+      <p>ChargePoint runs 66% of Level 2 ports but only 15% of DC fast ports. Tesla and Red E together run 58% of DC fast ports.</p>
+      <div class="panels">
+        <figure>
+          <figcaption><span class="swatch swatch-l2"></span>Level 2: 9,867 ports</figcaption>
+          <div id="chart-net-l2" class="chart" role="img" aria-label="Ranked bars of Level 2 ports by network. ChargePoint leads with 66 percent. Values are in the table below the charts."></div>
+        </figure>
+        <figure>
+          <figcaption><span class="swatch swatch-dc"></span>DC fast: 1,993 ports</figcaption>
+          <div id="chart-net-dc" class="chart" role="img" aria-label="Ranked bars of DC fast ports by network. Tesla leads with 34 percent, followed by Red E with 24 percent. Values are in the table below the charts."></div>
+        </figure>
+      </div>
+      <p class="note">Built with D3. Hover over a bar for details. Share of each charger level's ports, on the same scale in both panels. Tesla combines the Tesla and Tesla Destination networks.</p>
+      <details><summary>Show the data as a table</summary><div id="table-networks" class="table-wrap"></div></details>
+    </section>
+
+    <section aria-labelledby="about">
+      <h2 id="about">About the data</h2>
+      <p>The data comes from the <a href="https://afdc.energy.gov/data_download">Alternative Fuels Data Center</a> at the U.S. Department of Energy. We downloaded it on October 12, 2026 and filtered it to electric stations in Massachusetts that are public and available. County outlines come from the Census-based us-atlas boundary files.</p>
+      <p>Keep three limits in mind:</p>
+      <ul>
+        <li><strong>Opening dates:</strong> these are as reported to the AFDC and may reflect when a network's data entered the database, so a jump in one year may not all be new construction.</li>
+        <li><strong>"Public" access:</strong> this includes 31 records (124 ports) flagged as restricted, such as chargers for hotel guests only.</li>
+        <li><strong>Who benefits:</strong> this data shows where ports are and who runs them. It does not show who uses them or who lives nearby.</li>
+      </ul>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5.30.0/build/vega.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.21.0/build/vega-lite.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.26.0/build/vega-embed.min.js"></script>
+  <script src="data/site-data.js"></script>
+  <script src="js/charts.js"></script>
+</body>
+</html>

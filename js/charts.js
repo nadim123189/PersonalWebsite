@@ -224,36 +224,51 @@ function drawMap() {
   });
 }
 
-/* 3. Who: ranked networks for each level */
+/* 3. Who: ranked networks for each level, drawn with D3 */
+const barTip = d3.select("body").append("div").attr("class", "bar-tip");
+
 function drawNetwork(id, rows, color) {
   const width = widthOf(id);
-  const values = rows.map((r) => ({ ...r, label: `${Math.round(r.share * 100)}%  (${fmt(r.ports)})` }));
-  const x = { field: "share", type: "quantitative", axis: null, scale: { domain: [0, 1] } };
-  const y = { field: "name", type: "nominal", title: null, sort: null, axis: { domain: false, ticks: false, labelLimit: 130, labelPadding: 6 } };
-  return embed(id, {
-    data: { values },
-    width: width - 125,
-    height: { step: 30 },
-    autosize: { type: "pad" },
-    layer: [
-      {
-        mark: { type: "bar", cornerRadiusEnd: 4, height: 18 },
-        encoding: {
-          x, y,
-          color: { condition: { test: "datum.name === 'All others'", value: "#a9b5a6" }, value: color },
-          tooltip: [
-            { field: "name", title: "Network" },
-            { field: "ports", type: "quantitative", title: "Ports", format: "," },
-            { field: "share", type: "quantitative", title: "Share of this level", format: ".1%" },
-          ],
-        },
-      },
-      {
-        mark: { type: "text", align: "left", dx: 6, fontSize: 12, color: INK },
-        encoding: { x, y, text: { field: "label" } },
-      },
-    ],
-  });
+  const margin = { top: 4, right: 20, bottom: 4, left: 116 };
+  const height = rows.length * 30 + margin.top + margin.bottom;
+
+  const x = d3.scaleLinear().domain([0, 1]).range([0, width - margin.left - margin.right]);
+  const y = d3.scaleBand().domain(rows.map((d) => d.name)).range([margin.top, height - margin.bottom]);
+
+  const root = d3.select(`#${id}`);
+  root.selectAll("*").remove();
+  const svg = root.append("svg").attr("width", width).attr("height", height);
+
+  const row = svg.selectAll("g").data(rows).join("g")
+    .attr("transform", (d) => `translate(${margin.left},${y(d.name) + y.bandwidth() / 2})`);
+
+  row.append("text")
+    .attr("class", "bar-name")
+    .attr("x", -6)
+    .attr("dy", "0.35em")
+    .attr("text-anchor", "end")
+    .text((d) => d.name);
+
+  row.append("rect")
+    .attr("y", -9)
+    .attr("height", 18)
+    .attr("width", (d) => x(d.share))
+    .attr("rx", 3)
+    .attr("fill", (d) => (d.name === "All others" ? "#a9b5a6" : color))
+    .on("pointerenter pointermove", (event, d) => {
+      barTip
+        .html(`<b>${d.name}</b><br>${fmt(d.ports)} ports<br>${(d.share * 100).toFixed(1)}% of this level`)
+        .style("display", "block");
+      const room = window.innerWidth - barTip.node().offsetWidth - 8;
+      barTip.style("left", `${Math.min(event.clientX + 12, room)}px`).style("top", `${event.clientY + 12}px`);
+    })
+    .on("pointerleave", () => barTip.style("display", "none"));
+
+  row.append("text")
+    .attr("class", "bar-value")
+    .attr("x", (d) => x(d.share) + 6)
+    .attr("dy", "0.35em")
+    .text((d) => `${Math.round(d.share * 100)}% (${fmt(d.ports)})`);
 }
 
 function drawAll() {
